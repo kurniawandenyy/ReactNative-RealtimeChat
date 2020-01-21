@@ -34,7 +34,15 @@ const ChatScreen = props => {
       <ImageBackground
         source={require('../img/bg.png')}
         style={styles.backgroundImage}>
-        <Chat data={[props.receiverId, props.image]} />
+        <Chat
+          data={[
+            props.receiverId,
+            props.title,
+            props.email,
+            props.address,
+            props.image,
+          ]}
+        />
       </ImageBackground>
     </Container>
   );

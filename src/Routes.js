@@ -5,6 +5,7 @@ import Signup from './screens/Register';
 import Home from './screens/Home';
 import Chat from './screens/ChatScreen';
 import Friend from './screens/FriendProfile';
+import Maps from './screens/MapsScreen';
 
 const Routes = () => {
   return (
@@ -15,6 +16,7 @@ const Routes = () => {
         <Scene key="home" component={Home} title="Home" />
         <Scene key="chat" component={Chat} title="Chat" />
         <Scene key="friend" component={Friend} title="Friend" />
+        <Scene key="maps" component={Maps} title="Maps" />
       </Stack>
     </Router>
   );

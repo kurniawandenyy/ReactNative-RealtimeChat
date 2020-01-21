@@ -1,5 +1,12 @@
 import React from 'react';
-import {Text, StyleSheet, Platform, ImageBackground} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  Platform,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import {
   Container,
   Header,
@@ -12,6 +19,7 @@ import {
   ScrollableTab,
   Tab,
   TabHeading,
+  Fab,
 } from 'native-base';
 import Profile from '../components/Profile';
 import ListChat from '../components/ListChat';
@@ -37,6 +45,10 @@ const logout = () => {
   );
 };
 
+const mapsClick = () => {
+  Actions.maps();
+};
+
 const Home = () => {
   return (
     <Container style={styles.MainContainer}>
@@ -54,10 +66,20 @@ const Home = () => {
                 <Icon name="menu" style={styles.icon} />
               </MenuTrigger>
               <MenuOptions>
-                <MenuOption onSelect={() => alert('Change Password')}>
-                  <Text style={styles.menuText}>Change Password</Text>
+                <MenuOption
+                  onSelect={() => alert('setting')}
+                  style={{flexDirection: 'row'}}>
+                  <Icon
+                    name="ios-settings"
+                    style={{color: '#BC2C3D', fontSize: 24}}
+                  />
+                  <Text style={styles.menuText}>Setting</Text>
                 </MenuOption>
-                <MenuOption onSelect={logout}>
+                <MenuOption onSelect={logout} style={{flexDirection: 'row'}}>
+                  <Icon
+                    name="md-log-out"
+                    style={{color: '#BC2C3D', fontSize: 24}}
+                  />
                   <Text style={styles.menuText}>Logout</Text>
                 </MenuOption>
               </MenuOptions>
@@ -76,6 +98,12 @@ const Home = () => {
             source={require('../img/bg.png')}
             style={styles.backgroundImage}>
             <ListChat />
+            <Fab
+              position="bottomRight"
+              style={{backgroundColor: '#EFD2BC'}}
+              onPress={mapsClick}>
+              <Icon name={'ios-map'} style={{color: '#BC2C3D', fontSize: 34}} />
+            </Fab>
           </ImageBackground>
         </Tab>
         <Tab
@@ -88,6 +116,12 @@ const Home = () => {
             source={require('../img/bg.png')}
             style={styles.backgroundImage}>
             <ListFriend />
+            <Fab
+              position="bottomRight"
+              style={{backgroundColor: '#EFD2BC'}}
+              onPress={mapsClick}>
+              <Icon name={'ios-map'} style={{color: '#BC2C3D', fontSize: 34}} />
+            </Fab>
           </ImageBackground>
         </Tab>
         <Tab
@@ -145,6 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     margin: 3,
     fontWeight: 'bold',
+    marginLeft: 5,
   },
 
   tabText: {

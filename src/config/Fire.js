@@ -52,7 +52,7 @@ class Firebase {
       });
   }
 
-  updateData(data, id, img) {
+  updateData(data, id, img, lat, lng) {
     return firebase
       .database()
       .ref('user/' + id)
@@ -61,6 +61,8 @@ class Firebase {
         email: data.email,
         address: data.address,
         avatar: img,
+        latitude: lat,
+        longitude: lng,
       })
       .then(() => {
         this.updateDisplayName(data);
@@ -104,7 +106,7 @@ class Firebase {
     return firebase.auth().signOut();
   }
 
-  addUserData(data) {
+  addUserData(data, lat, lng) {
     let user = this.current();
     let userId = firebase.auth().currentUser.uid;
     return firebase
@@ -113,6 +115,8 @@ class Firebase {
       .set({
         name: data.name,
         email: user.email,
+        latitude: lat,
+        longitude: lng,
       });
   }
 
@@ -138,9 +142,11 @@ class Firebase {
       .once('value', list => {
         const datas = [];
         list.forEach(element => {
-          const temp = element.val();
-          const keys = element.key;
-          datas.push({temp, keys});
+          if (element.key !== this.uid) {
+            const temp = element.val();
+            const keys = element.key;
+            datas.push({temp, keys});
+          }
         });
         listUser(datas);
       });

@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
-import {FlatList, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  RefreshControl,
+} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {Actions} from 'react-native-router-flux';
 import firebase from '../config/Fire';
 import {Bubbles} from 'react-native-loader';
+import {ScrollView} from 'react-native-gesture-handler';
 
 export default class ListFriend extends Component {
   constructor() {
@@ -11,6 +19,7 @@ export default class ListFriend extends Component {
     this.state = {
       users: [],
       isLoading: true,
+      refresh: false,
     };
   }
 
@@ -31,13 +40,14 @@ export default class ListFriend extends Component {
           title: item.temp.name,
           email: item.temp.email,
           address: item.temp.address,
+          image: item.temp.avatar,
         })
       }>
       <ListItem
         title={item.temp.name}
         subtitle={item.temp.email}
         leftAvatar={{
-          // source: item.avatar_url && {uri: item.avatar_url},
+          source: item.temp.avatar && {uri: item.temp.avatar},
           title: item.temp.name[0],
         }}
         bottomDivider
@@ -45,6 +55,13 @@ export default class ListFriend extends Component {
       />
     </TouchableOpacity>
   );
+
+  onRefresh = () => {
+    this.setState({refresh: true});
+    firebase.shared.getAlluser(this.listUser);
+    this.setState({refresh: false});
+  };
+
   render() {
     return this.state.isLoading ? (
       <View style={styles.loader}>
@@ -52,11 +69,19 @@ export default class ListFriend extends Component {
         <Bubbles size={15} color="#BC2C3D" />
       </View>
     ) : (
-      <FlatList
-        keyExtractor={this.keyExtractor}
-        data={this.state.users}
-        renderItem={this.renderItem}
-      />
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            onRefresh={this.onRefresh}
+            refreshing={this.state.refresh}
+          />
+        }>
+        <FlatList
+          keyExtractor={this.keyExtractor}
+          data={this.state.users}
+          renderItem={this.renderItem}
+        />
+      </ScrollView>
     );
   }
 }

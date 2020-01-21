@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
-import {FlatList, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  RefreshControl,
+} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {Actions} from 'react-native-router-flux';
 import firebase from '../config/Fire';
 import {Bubbles} from 'react-native-loader';
+import {ScrollView} from 'react-native-gesture-handler';
 
 export default class ListChat extends Component {
   constructor() {
@@ -11,6 +19,7 @@ export default class ListChat extends Component {
     this.state = {
       users: [],
       isLoading: true,
+      refresh: false,
     };
   }
 
@@ -31,6 +40,8 @@ export default class ListChat extends Component {
           title: item.temp.name,
           receiverId: item.keys,
           image: item.temp.avatar,
+          email: item.temp.email,
+          address: item.temp.address,
         })
       }>
       <ListItem
@@ -45,19 +56,33 @@ export default class ListChat extends Component {
       />
     </TouchableOpacity>
   );
+
+  onRefresh = () => {
+    this.setState({refresh: true});
+    firebase.shared.getAlluser(this.listUser);
+    this.setState({refresh: false});
+  };
+
   render() {
-    console.log(this.state.users);
     return this.state.isLoading ? (
       <View style={styles.loader}>
         <Text style={styles.loadingText}>Please Wait...</Text>
         <Bubbles size={15} color="#BC2C3D" />
       </View>
     ) : (
-      <FlatList
-        keyExtractor={this.keyExtractor}
-        data={this.state.users}
-        renderItem={this.renderItem}
-      />
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            onRefresh={this.onRefresh}
+            refreshing={this.state.refresh}
+          />
+        }>
+        <FlatList
+          keyExtractor={this.keyExtractor}
+          data={this.state.users}
+          renderItem={this.renderItem}
+        />
+      </ScrollView>
     );
   }
 }

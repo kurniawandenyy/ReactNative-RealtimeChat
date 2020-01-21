@@ -28,6 +28,8 @@ class Profile extends Component {
       isVisible: false,
       update: '',
       url: '',
+      latitude: 0,
+      longitude: 0,
       isLoading: false,
       showAlert: false,
     };
@@ -47,7 +49,13 @@ class Profile extends Component {
       address: values.address,
     });
     firebase.shared
-      .updateData(values, this.state.id, this.state.url)
+      .updateData(
+        values,
+        this.state.id,
+        this.state.url,
+        this.state.latitude,
+        this.state.longitude,
+      )
       .then(() => {
         this.getData(this.state.id);
         this.hideOverlay();
@@ -71,6 +79,8 @@ class Profile extends Component {
           name: result.val().name || '',
           email: result.val().email || '',
           address: result.val().address || '',
+          latitude: result.val().latitude || 0,
+          longitude: result.val().longitude || 0,
           id: uid,
           isLoading: false,
         });
@@ -142,7 +152,13 @@ class Profile extends Component {
       firebase.shared.getImage(this.state.id).then(url => {
         const {name, email, address} = this.state;
         const data = {name, email, address};
-        firebase.shared.updateData(data, this.state.id, url);
+        firebase.shared.updateData(
+          data,
+          this.state.id,
+          url,
+          this.state.latitude,
+          this.state.longitude,
+        );
         this.setState({url, isLoading: false});
       });
     });
@@ -168,7 +184,7 @@ class Profile extends Component {
   };
 
   render() {
-    // console.log(this.state.photo ? this.state.photo.fileName : this.state.photo);
+    console.log(this.state.url);
     return this.state.isLoading ? (
       <View style={styles.loader}>
         <Text style={styles.loadingText}>Please Wait...</Text>
